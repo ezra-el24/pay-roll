@@ -59,5 +59,97 @@
       window.location.href = "display.html";
     });
   </script>
+  <div class="container">
+    <h1>Payroll Summary</h1>
+    <div id="output"></div>
+    <button onclick="goBack()">Return to Form</button>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("payrollData"));
+    const output = document.getElementById("output");
+
+    output.innerHTML = `
+      <p><strong>Employee Name:</strong> ${data.name}</p>
+      <p><strong>Daily Rate:</strong> ₱${data.rate.toFixed(2)}</p>
+      <p><strong>Days Worked:</strong> ${data.days}</p>
+      <p><strong>Gross Pay:</strong> ₱${data.grossPay.toFixed(2)}</p>
+      <p><strong>SSS (5%):</strong> ₱${data.sss.toFixed(2)}</p>
+      <p><strong>Pag-ibig (3%):</strong> ₱${data.pagibig.toFixed(2)}</p>
+      <p><strong>Philhealth (2%):</strong> ₱${data.philhealth.toFixed(2)}</p>
+      <p><strong>Tax (5%):</strong> ₱${data.tax.toFixed(2)}</p>
+      <p><strong>Total Deduction:</strong> ₱${data.totalDeduction.toFixed(2)}</p>
+      <p><strong>Net Pay:</strong> ₱${data.netPay.toFixed(2)}</p>
+    `;
+
+    function goBack() {
+      window.location.href = "main.html";
+    }
+  </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payroll Form</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Payroll Form</h1>
+    <form id="payrollForm">
+    <label for="idNumber">Employee ID Number:</label>
+    <input type="text" id="idNumber" required />
+
+    <label for="name">Employee Name:</label>
+    <input type="text" id="name" required />
+
+    <label for="rate">Daily Rate (₱):</label>
+    <input type="number" id="rate" required />
+
+    <label for="days">Days Worked:</label>
+    <input type="number" id="days" required />
+
+      <button type="submit">Compute Payroll</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("payrollForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const rate = parseFloat(document.getElementById("rate").value);
+      const days = parseInt(document.getElementById("days").value);
+
+      const grossPay = rate * days;
+      const sss = grossPay * 0.05;
+      const pagibig = grossPay * 0.03;
+      const philhealth = grossPay * 0.02;
+      const tax = grossPay * 0.05;
+      const totalDeduction = sss + pagibig + philhealth + tax;
+      const netPay = grossPay - totalDeduction;
+
+      const payrollData = {
+        name,
+        rate,
+        days,
+        grossPay,
+        sss,
+        pagibig,
+        philhealth,
+        tax,
+        totalDeduction,
+        netPay
+      };
+
+      localStorage.setItem("payrollData", JSON.stringify(payrollData));
+      window.location.href = "display.html";
+    });
+  </script>
 </body>
 </html>
+
+</body>
+</html>
+
